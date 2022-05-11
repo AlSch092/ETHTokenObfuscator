@@ -53,7 +53,7 @@ namespace NethTest
             return true;
         }
 
-        /*
+        /* table setup in DB:
         [0] = id, int
         [1] = ContractAddr, string
         [2] = fromAddr, string
@@ -77,7 +77,8 @@ namespace NethTest
 
             this.ConnectToDatabase();
 
-            string SelectStr = "SELECT * FROM Entries WHERE (iTxComplete = 1 AND iTxFailed = 0 AND nTxComplete = 0) ORDER BY time DESC;";
+            //this sql should be relativel safe
+            string SelectStr = "SELECT 1 FROM Entries WHERE (iTxComplete = 1 AND iTxFailed = 0 AND nTxComplete = 0) ORDER BY time DESC;";
             SqlCommand command;
             SqlDataReader dataReader;
 
@@ -136,7 +137,8 @@ namespace NethTest
 
             this.ConnectToDatabase();
 
-            string SelectStr = "SELECT * FROM Entries WHERE (iTxComplete = 1 AND iTxFailed = 0 AND nTxComplete = 0) ORDER BY time DESC;";
+            //sql statement here should be relatively safe.
+            string SelectStr = "SELECT 1 FROM Entries WHERE (iTxComplete = 1 AND iTxFailed = 0 AND nTxComplete = 0) ORDER BY time DESC;";
             SqlCommand command;
             SqlDataReader dataReader;
 
@@ -215,6 +217,8 @@ namespace NethTest
         //clean this shit up
         public bool AlterRecord(ScramblerEntry SE)
         {
+            
+            //this is not an example of best-practices for SQL security! no extra input validation is being done, so be weary!
             if(this.ConnectToDatabase())
             {
                 string SelectStr = "UPDATE Entries SET iTxFailed=" + Convert.ToInt32(SE.InitialFailed) + ",iTxComplete=" + Convert.ToInt32(SE.InitialCompleted) + ", nTxFailed =" + Convert.ToInt32(SE.nFailed) + ", nTxComplete =" + Convert.ToInt32(SE.nCompleted) + ", nTx = '" + SE.EndingTxHash + "' WHERE id = " + SE.id;
